@@ -1,40 +1,58 @@
 #include <iostream>
 using namespace std;
 
-bool IsAsc(int seq[], int n)
+class Seq
 {
-    if(seq[0]<seq[n-1])
-        return true;
+    bool isAsc;
+    int* body;
+    int size;
+public:
+    Seq();
+    int SearchBin(int x);
+    ~Seq();
+};
+
+Seq::Seq()
+{
+    cin >> size;
+    body = new int[size];
+    for (int i = 0; i < size; i++)
+        cin >> body[i];
+    if (body[0] < body[size - 1])
+        isAsc=true;
     else
-        return false;
+        isAsc=false;
 }
 
-int SearchBin(int seq[], int n, int x, bool isAsc)
+int Seq::SearchBin(int x)
 {
-    int first=0, last=n;
-    bool q=1;
-    while(q)
+    int first = 0, last = size;
+    bool q = 1;
+    while (q)
     {
-        int mid=(first+last)/2;
-        if(first<=last)
+        int mid = (first + last) / 2;
+        if (first <= last)
         {
-            if((x<seq[mid] && isAsc) || (x>seq[mid] && !isAsc))
-                last = mid-1;
-            else if((x>seq[mid] && isAsc) || (x<seq[mid] && !isAsc))
-                first = mid+1;
+            if ((x < body[mid] && isAsc) || (x > body[mid] && !isAsc))
+                last = mid - 1;
+            else if ((x > body[mid] && isAsc) || (x < body[mid] && !isAsc))
+                first = mid + 1;
             else
             {
-                q=0;
+                q = 0;
                 return mid;
             }
         }
         else
-            q=0;
+            q = 0;
     }
     return -1;
 }
 
-
+Seq::~Seq()
+{
+    delete[] body;
+}
 
 int main()
 {
@@ -42,20 +60,14 @@ int main()
     cin >> m;
     for (int i = 0; i < m; i++)
     {
-        cin >> n;
-        int* seq = new int[n];
-        for (int j = 0; j < n; j++)
-        {
-            cin >> seq[j];
-        }
+        Seq seq;
         cin >> p;
         for (int j = 0; j < p; j++)
         {
             cin >> x;
-            cout << SearchBin(seq, n, x, IsAsc(seq, n)) << '\n';
+            cout << seq.SearchBin(x) << '\n';
         }
-        delete[] seq;
     }
-    
+
     return 0;
 }
